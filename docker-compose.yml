@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: task-manager-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # DB_HOST burada .env'den gelir; container İÇİNDEN host makinedeki
+      # Docker-dışı Postgres'e erişmek için genelde "host.docker.internal" olmalı.
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - APP_PORT=${APP_PORT}
+      - NODE_ENV=${NODE_ENV}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    extra_hosts:
+      # Linux'ta host.docker.internal'ın çalışması için gerekli (Docker 20.10+).
+      # Mac/Windows Docker Desktop'ta zaten hazır gelir, bu satır zarar vermez.
+      - "host.docker.internal:host-gateway"
+
+# NOT: Veritabanı BİLEREK burada tanımlı değil.
+# Postgres, hem local hem sunucuda Docker dışında, işletim sistemine
+# doğrudan kurulacak ve .env dosyasındaki DB_HOST/DB_PORT üzerinden erişilecek.

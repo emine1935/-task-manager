@@ -1,0 +1,20 @@
+# Ortam değişkenleri - ASLA commit edilmeyecek
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Docker
+*.log
+
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
