@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: ./backend
-    container_name: task-manager-backend
+ 
     restart: unless-stopped
     env_file:
       - .env
