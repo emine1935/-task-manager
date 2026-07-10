@@ -20,6 +20,14 @@ app.get("/health", async (req, res) => {
 });
 
 // --- Görevler (tasks) için basit CRUD örneği ---
+app.get("/tasks/count", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT COUNT(*) FROM tasks");
+    res.json({ count: parseInt(result.rows[0].count, 10) });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 app.get("/tasks", async (req, res) => {
   try {
     const result = await pool.query("SELECT id, title, is_done, created_at FROM tasks ORDER BY id DESC");
