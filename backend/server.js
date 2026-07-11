@@ -1,4 +1,5 @@
-require("dotenv").config();
+﻿require("dotenv").config();
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const { pool, checkConnection } = require("./db");
@@ -6,10 +7,11 @@ const { pool, checkConnection } = require("./db");
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
 
 const PORT = process.env.APP_PORT || 3000;
 
-// --- Health check: hem uygulamanın hem de harici veritabanının durumunu gösterir ---
+// --- Health check: hem uygulamanÄ±n hem de harici veritabanÄ±nÄ±n durumunu gÃ¶sterir ---
 app.get("/health", async (req, res) => {
   try {
     await checkConnection();
@@ -19,7 +21,7 @@ app.get("/health", async (req, res) => {
   }
 });
 
-// --- Görevler (tasks) için basit CRUD örneği ---
+// --- GÃ¶revler (tasks) iÃ§in basit CRUD Ã¶rneÄŸi ---
 app.get("/tasks/count", async (req, res) => {
   try {
     const result = await pool.query("SELECT COUNT(*) FROM tasks");
@@ -40,7 +42,7 @@ app.get("/tasks", async (req, res) => {
 app.post("/tasks", async (req, res) => {
   const { title } = req.body;
   if (!title || !title.trim()) {
-    return res.status(400).json({ error: "title alanı zorunludur" });
+    return res.status(400).json({ error: "title alanÄ± zorunludur" });
   }
   try {
     const result = await pool.query(
@@ -59,7 +61,7 @@ app.patch("/tasks/:id/toggle", async (req, res) => {
       "UPDATE tasks SET is_done = NOT is_done WHERE id = $1 RETURNING id, title, is_done, created_at",
       [req.params.id]
     );
-    if (result.rows.length === 0) return res.status(404).json({ error: "Görev bulunamadı" });
+    if (result.rows.length === 0) return res.status(404).json({ error: "GÃ¶rev bulunamadÄ±" });
     res.json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -76,5 +78,7 @@ app.delete("/tasks/:id", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Sunucu ${PORT} portunda çalışıyor (env: ${process.env.NODE_ENV || "unknown"})`);
+  console.log(`Sunucu ${PORT} portunda Ã§alÄ±ÅŸÄ±yor (env: ${process.env.NODE_ENV || "unknown"})`);
 });
+
+
