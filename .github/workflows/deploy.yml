@@ -1,24 +1,23 @@
-# OPSİYONEL: CI/CD ile otomatik deploy istiyorsanız kullanın.
-# İstemiyorsanız bu dosyayı silip sadece manuel "ssh + ./deploy.sh" ile de
-# ilerleyebilirsiniz — deploy.sh script'i her iki durumda da aynıdır.
+﻿# OPSÄ°YONEL: CI/CD ile otomatik deploy istiyorsanÄ±z kullanÄ±n.
+# Ä°stemiyorsanÄ±z bu dosyayÄ± silip sadece manuel "ssh + ./deploy.sh" ile de
+# ilerleyebilirsiniz â€” deploy.sh script'i her iki durumda da aynÄ±dÄ±r.
 #
 # Gerekli GitHub Secrets (Repo > Settings > Secrets and variables > Actions):
 #   SERVER_HOST       -> Sunucunun IP adresi
-#   SERVER_USER       -> SSH kullanıcı adı
-#   SERVER_SSH_KEY    -> SSH private key (id_ed25519 içeriği)
-#   SERVER_APP_DIR    -> Sunucuda projenin bulunduğu klasör (örn. /opt/task-manager)
+#   SERVER_USER       -> SSH kullanÄ±cÄ± adÄ±
+#   SERVER_SSH_KEY    -> SSH private key (id_ed25519 iÃ§eriÄŸi)
+#   SERVER_APP_DIR    -> Sunucuda projenin bulunduÄŸu klasÃ¶r (Ã¶rn. /opt/task-manager)
 
 name: Deploy to Server
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: SSH ile sunucuya bağlan ve deploy et
+      - name: SSH ile sunucuya baÄŸlan ve deploy et
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -27,3 +26,5 @@ jobs:
           script: |
             cd ${{ secrets.SERVER_APP_DIR }}
             ./deploy.sh main
+
+
